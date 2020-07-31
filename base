@@ -86,10 +86,12 @@ while days < 130:
 		if il[i] < 2:
 			# the base construction of a civilian factory is 5, then the buildings construction speed and
 			# infrastructure multiplier in added to the construction progress
+			# no floats allowed all value behind the comma is discarded
 			icl[i - fix] = round(icl[i - fix] + civr * 5 * il[i] * ics)
 			# infrastructure cost 3000 to build any left over construction points are discarded
 			if icl[i - fix] >= 3000:
 				icl[i - fix] = 0
+				# for some reason when te value reaches 1,7 0,0000002 is added to the value so the roundup is needed
 				il[i] = round(il[i] + 0.1, 1)
 				# every level of infrastructure is 0,1 when it reaches 2 it is at its maximum and is removed from its building spot
 				if il[i] >= 2:

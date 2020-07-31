@@ -1,0 +1,121 @@
+import math
+
+# the progress of construction
+# icl=infrastructure construction list
+# ccl= civilian construction list
+# mcl= military construction list (not yet made)
+icl = []
+ccl = []
+
+# the days passed (should always be 0 at the start)
+days = 0
+
+# how many civilian factory's the country starts with
+civ = 80
+
+# what the infrastructure average base value is of the states that you are building in
+# infrastructure can have 11 levels from 0 to 10 where 0 gives +0% and 10 gives +100% construction speed
+iabv = 1.4
+
+# infrastructure list to store the lvl of infrastructure
+il = []
+
+# the basic construction speed of all the buildings (assuming that the country starts at civilian economy with no
+# construction technology researched
+# ics=infrastructure construction speed
+# ccs= civilian construction speed
+# mcs= military construction speed (not yet implemented)
+ics = 1.1
+ccs = 0.8
+mcs = 0.8
+
+# civilian build how many civilian factory's has been build, used to determine how many civilian factory's you want to
+# build
+cb = 0
+
+# the maximum amount of factory's you can build in 1 state (will change as you research)
+statemax = "?"
+
+# how many days you want to pass to see how much production you have (if starting at 1936 4 years (1460 days) is
+# expected)
+while days < 130:
+	# temporary  variables to fix the broken code for now
+	i = 1
+	fix = 0
+
+	# as time passes: economy laws, trade laws and research effects building speed atm it is defined for SOV
+	if days == 70:
+		ics = ics + 0.3
+		mcs = mcs + 0.5
+	if days == 85:
+		ccs = ccs + 0.1
+		ics = ics + 0.1
+		mcs = mcs + 0.1
+	if days == 239:
+		ccs = ccs + 0.1
+		ics = ics + 0.1
+		mcs = mcs + 0.1
+	if days == 140:
+		ccs = ccs + 0.05
+		ics = ics + 0.05
+		mcs = mcs + 0.05
+	# to determine how many days have passed and at what day we are (would like this to become a date)
+	days = days + 1
+	print(days)
+
+	# civilian used to make sure that the last line gets the correct amount of civilian factory's
+	civu = 0
+
+	# creates infrastructure lines when enough civilian factory's are present
+	if len(icl) < (math.ceil(civ / 15)):
+		print("new line")
+		for i in range(math.ceil(civ / 15) - len(icl)):
+			il.append(iabv)
+			icl.append(0)
+
+	# every line can have a maximum of 15 civilian factory's working at it
+	# this for defines how many lines can be worked at
+	for i in range(math.ceil(civ / 15)):
+		# this code make sure that the maximum of 15 can be worked at 1 line or the remaining factory's for the last line
+		civr = civ - civu
+		if civr > 15:
+			civr = 15
+
+		# infrastructure can have a maximum value of 2, when that is reached the line is removed
+		# and now civilian factory's will be build in the state with the maximum infrastructure level
+		if il[i] < 2:
+			# the base construction of a civilian factory is 5, then the buildings construction speed and
+			# infrastructure multiplier in added to the construction progress
+			icl[i - fix] = round(icl[i - fix] + civr * 5 * il[i] * ics)
+			# infrastructure cost 3000 to build any left over construction points are discarded
+			if icl[i - fix] >= 3000:
+				icl[i - fix] = 0
+				il[i] = round(il[i] + 0.1, 1)
+				# every level of infrastructure is 0,1 when it reaches 2 it is at its maximum and is removed from its building spot
+				if il[i] >= 2:
+					# however since the progress is at the end of the list all the finished progress needs to be
+					# removed so that the last line will be first in line. however to make sure no errors occurs in the
+					# current loop the fix variable corrects the i loop
+					del icl[i - fix]
+					fix = fix + 1
+
+
+		# when the infrastructure has reached the maximum level civilian factory's should be build in the state
+		elif cb < 10:
+			try:
+				ccl[i] = round(ccl[i] + civr * 5 * il[i] * ics)
+				print("civ" + str(ccl))
+				if ccl[i] >= 7200:
+					civ = civ + 1
+					cb = cb + 1
+					ccl[i] = 0
+					print(ccl)
+			except IndexError:
+				ccl.append(0)
+				print("add civ line")
+				continue
+
+		civu = civu + 15
+	print("infa: " + str(il))
+	print("civ: " + str(ccl))
+	print(icl)

@@ -1,4 +1,5 @@
-
+# not made by me found on the wiki research of HOI4
+# https://hoi4.paradoxwikis.com/Research#Research_modifiers
 res_perc = 0.0
 time = 0
 base = 85      # Base Cost

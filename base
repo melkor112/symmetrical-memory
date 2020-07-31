@@ -39,8 +39,7 @@ statemax = "?"
 # how many days you want to pass to see how much production you have (if starting at 1936 4 years (1460 days) is
 # expected)
 while days < 130:
-	# temporary  variables to fix the broken code for now
-	i = 1
+	# temporary  variable to fix the broken code for now
 	fix = 0
 
 	# as time passes: economy laws, trade laws and research effects building speed atm it is defined for SOV
